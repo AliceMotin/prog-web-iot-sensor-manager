@@ -1,0 +1,27 @@
+{
+  "name": "programacao-web-trabalho1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AliceMotin/programacao-web-trabalho1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AliceMotin/programacao-web-trabalho1/issues"
+  },
+  "homepage": "https://github.com/AliceMotin/programacao-web-trabalho1#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongodb": "^7.1.1"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}
