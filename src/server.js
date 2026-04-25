@@ -35,6 +35,20 @@ app.post("/cadastro", async function (req, res) {
     .send("O usuário foi criado com sucesso, pode prosseguir para o login");
 });
 
+app.post("/login", async function (req, res) {
+  let { email, senha } = req.body;
+  let registro = {};
+  registro.email = email;
+  registro.senha = senha;
+
+  const usuario = await clientes.findOne(registro);
+  if (usuario) {
+    res.status(200).send("O usuário foi achado com sucesso");
+  } else {
+    res.status(401).send("O usuário não foi achado");
+  }
+});
+
 app.get(/^(.+)$/, function (req, res) {
   try {
     res.send("A pagina que vc busca nao existe");

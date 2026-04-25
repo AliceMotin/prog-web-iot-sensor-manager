@@ -2,13 +2,11 @@ const request = require("supertest");
 const server = require("../src/server");
 const { MongoClient } = require("mongodb");
 
-describe("POST /cadastro", () => {
-  //let connection;
+describe("testes de cadastro e login", () => {
   var db;
   var clientes;
   var client;
 
-  // Conecta ao banco antes de TODOS os testes
   beforeAll(async () => {
     client = new MongoClient("mongodb://127.0.0.1:27017");
     await client.connect();
@@ -16,7 +14,6 @@ describe("POST /cadastro", () => {
     clientes = await db.collection("clientes");
   });
 
-  // Fecha a conexão após TODOS os testes
   afterAll(async () => {
     if (client) {
       await client.close();
@@ -33,6 +30,27 @@ describe("POST /cadastro", () => {
     const response = await request(server).post("/cadastro").send(novoUsuario);
 
     expect(response.status).toBe(201);
-    //expect(response.body).toHaveProperty("_id"); // O Mongo gera o _id automaticamente
+  });
+
+  it("deve buscar o email e a senha do usuário no BD - válido", async () => {
+    const usuarioLoginOK = {
+      email: "astro@teste.com",
+      senha: "123",
+    };
+
+    const response = await request(server).post("/login").send(usuarioLoginOK);
+
+    expect(response.status).toBe(200);
+  });
+
+  it("deve buscar o email e a senha do usuário no BD - inválido", async () => {
+    const usuarioLogin = {
+      email: "teste@invalido.com",
+      senha: "1223",
+    };
+
+    const response = await request(server).post("/login").send(usuarioLogin);
+
+    expect(response.status).toBe(401);
   });
 });
