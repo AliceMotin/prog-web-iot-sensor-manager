@@ -2,7 +2,7 @@ const request = require("supertest");
 const server = require("../src/server");
 const { MongoClient } = require("mongodb");
 
-describe("testes de cadastro e login", () => {
+describe("testes", () => {
   var db;
   var clientes;
   var client;
@@ -20,7 +20,7 @@ describe("testes de cadastro e login", () => {
     }
   });
 
-  it("deve salvar o usuário no MongoDB ao enviar dados válidos", async () => {
+  it.only("deve salvar o usuário no MongoDB ao enviar dados válidos", async () => {
     const novoUsuario = {
       nome: "Astro",
       email: "astro@teste.com",
@@ -52,5 +52,21 @@ describe("testes de cadastro e login", () => {
     const response = await request(server).post("/login").send(usuarioLogin);
 
     expect(response.status).toBe(401);
+  });
+
+  it.only("deve gerar DeviceID e DevicePWD ao cadastrar um novo sensor", async () => {
+    const novoSensor = {
+      email: "astro@teste.com",
+      apelido: "sensor1",
+      unidade: "Celsius",
+    };
+
+    const response = await request(server)
+      .post("/dispositivos")
+      .send(novoSensor);
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("deviceID");
+    expect(response.body).toHaveProperty("devicePWD");
   });
 });

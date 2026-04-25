@@ -49,6 +49,32 @@ app.post("/login", async function (req, res) {
   }
 });
 
+const crypto = require("crypto");
+
+app.post("/dispositivos", async function (req, res) {
+  let { email, apelido, unidade } = req.body;
+  let novoDispositivo = {};
+  novoDispositivo.email = email;
+  novoDispositivo.apelido = apelido;
+  novoDispositivo.unidade = unidade;
+  novoDispositivo.deviceID = crypto.randomUUID();
+  novoDispositivo.devicePWD = crypto.randomBytes(4).toString("hex");
+  novoDispositivo.valor = null;
+
+  await db.collection("dispositivos").insertOne(novoDispositivo);
+
+  //Atualizar a lista de sensores no documento do usuário
+  await db
+    .collection("clientes")
+    .updateOne(
+      { email: email },
+      { $push: { dispositivos: novoDispositivo.deviceID } }
+    );
+
+  res.status(201).send(novoDispositivo);
+  //talvez res.status(201).json(novoDispositivo);
+});
+
 app.get(/^(.+)$/, function (req, res) {
   try {
     res.send("A pagina que vc busca nao existe");
