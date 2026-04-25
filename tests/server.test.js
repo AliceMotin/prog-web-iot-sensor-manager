@@ -6,13 +6,21 @@ describe("testes", () => {
   var db;
   var clientes;
   var client;
+  var dispositivos;
 
   beforeAll(async () => {
     client = new MongoClient("mongodb://127.0.0.1:27017");
     await client.connect();
     db = await client.db("PESSOAS");
     clientes = await db.collection("clientes");
+    dispositivos = await db.collection("dispositivos");
   });
+
+  // beforeEach(async () => {
+  //   // Isso garante que cada teste rode em um ambiente limpo
+  //   await db.collection("dispositivos").deleteMany({});
+  //   await db.collection("clientes").deleteMany({});
+  // });
 
   afterAll(async () => {
     if (client) {
@@ -20,7 +28,7 @@ describe("testes", () => {
     }
   });
 
-  it.only("deve salvar o usuário no MongoDB ao enviar dados válidos", async () => {
+  it("deve salvar o usuário no MongoDB ao enviar dados válidos", async () => {
     const novoUsuario = {
       nome: "Astro",
       email: "astro@teste.com",
@@ -54,7 +62,7 @@ describe("testes", () => {
     expect(response.status).toBe(401);
   });
 
-  it.only("deve gerar DeviceID e DevicePWD ao cadastrar um novo sensor", async () => {
+  it("deve gerar DeviceID e DevicePWD ao cadastrar um novo sensor", async () => {
     const novoSensor = {
       email: "astro@teste.com",
       apelido: "sensor1",
@@ -68,5 +76,13 @@ describe("testes", () => {
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty("deviceID");
     expect(response.body).toHaveProperty("devicePWD");
+  });
+
+  it("deve listar os dispositivos do cliente", async () => {
+    const email = "astro@teste.com";
+
+    const response = await request(server).get(`/lista/${email}`);
+
+    expect(response.status).toBe(200);
   });
 });

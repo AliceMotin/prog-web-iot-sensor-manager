@@ -6,12 +6,14 @@ const { MongoClient } = require("mongodb");
 var db;
 var clientes;
 var client;
+var dispositivos;
 
 async function conecta() {
   client = new MongoClient("mongodb://127.0.0.1:27017");
   await client.connect();
   db = await client.db("PESSOAS");
   clientes = await db.collection("clientes");
+  dispositivos = await db.collection("dispositivos");
   console.log("conectado no mongoDB");
 }
 
@@ -61,7 +63,7 @@ app.post("/dispositivos", async function (req, res) {
   novoDispositivo.devicePWD = crypto.randomBytes(4).toString("hex");
   novoDispositivo.valor = null;
 
-  await db.collection("dispositivos").insertOne(novoDispositivo);
+  await dispositivos.insertOne(novoDispositivo);
 
   //Atualizar a lista de sensores no documento do usuário
   await db
@@ -71,17 +73,24 @@ app.post("/dispositivos", async function (req, res) {
       { $push: { dispositivos: novoDispositivo.deviceID } }
     );
 
-  res.status(201).send(novoDispositivo);
+  res.status(201).send(novoDispositivo); //-> talvez devolver apenas o device ID e devicePWD para o cliente
   //talvez res.status(201).json(novoDispositivo);
 });
 
-app.get(/^(.+)$/, function (req, res) {
-  try {
-    res.send("A pagina que vc busca nao existe");
-  } catch (e) {
-    res.end();
-  }
+//http://localhost:10000/lista/astro@teste.com
+app.get("/lista/:email", async function (req, resp) {
+  let email = req.params.email;
+  let listaDispositivos = await dispositivos.find({ email: email }).toArray();
+  resp.status(200).send(listaDispositivos);
 });
+
+// app.get(/^(.+)$/, function (req, res) {
+//   try {
+//     res.send("A pagina que vc busca nao existe");
+//   } catch (e) {
+//     res.end();
+//   }
+// });
 
 conecta();
 
