@@ -85,4 +85,24 @@ describe("testes", () => {
 
     expect(response.status).toBe(200);
   });
+
+  it("deve ser possível editar apelido", async () => {
+    const apelidoNovo = "sensorNovo21";
+    const email = "astro@teste.com";
+    const id = "85c5d1af-c6ca-40ae-bfb1-f39363d3fe4b";
+    const response = await request(server)
+      .patch(`/edicao/${id}`)
+      .send({ apelido: apelidoNovo, email: email });
+
+    expect(response.status).toBe(200);
+  });
+
+  it.only("deve ser possível remover dispositivos", async () => {
+    const id = "85c5d1af-c6ca-40ae-bfb1-f39363d3fe4b";
+    const email = "astro@teste.com";
+    const response = await request(server)
+      .delete(`/remover/${id}`)
+      .send({ email: email });
+    expect(response.status).toBe(200);
+  });
 });

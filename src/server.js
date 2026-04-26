@@ -84,6 +84,45 @@ app.get("/lista/:email", async function (req, resp) {
   resp.status(200).send(listaDispositivos);
 });
 
+app.patch("/edicao/:id", async function (req, resp) {
+  let id = req.params.id;
+  const email = req.body.email;
+  const novoApelido = req.body.apelido;
+
+  // 1. Validar permissão: Busca o sensor e checa se o dono é quem diz ser
+  const sensor = await dispositivos.findOne({ deviceID: id });
+
+  if (sensor.email !== email) {
+    return resp.status(403).send("Acesso negado: Este dispositivo não é seu!");
+  }
+
+  await dispositivos.updateOne(
+    { deviceID: id },
+    { $set: { apelido: novoApelido } }
+  );
+  resp.status(200).send("Atualizado com sucesso");
+});
+
+app.delete("/remover/:id", async function (req, resp) {
+  let id = req.params.id;
+  const email = req.body.email;
+
+  // 1. Validar permissão: Busca o sensor e checa se o dono é quem diz ser
+  const sensor = await dispositivos.findOne({ deviceID: id });
+
+  if (sensor.email !== email) {
+    return resp.status(403).send("Acesso negado: Este dispositivo não é seu!");
+  }
+
+  await dispositivos.deleteOne({ deviceID: id });
+
+  await clientes.updateOne(
+    { dispositivos: id }, // Filtra o cliente que possui esse ID na lista
+    { $pull: { dispositivos: id } }
+  );
+  resp.status(200).send("Dispositivo deletado com sucesso");
+});
+
 // app.get(/^(.+)$/, function (req, res) {
 //   try {
 //     res.send("A pagina que vc busca nao existe");
