@@ -97,12 +97,24 @@ describe("testes", () => {
     expect(response.status).toBe(200);
   });
 
-  it.only("deve ser possível remover dispositivos", async () => {
+  it("deve ser possível remover dispositivos", async () => {
     const id = "85c5d1af-c6ca-40ae-bfb1-f39363d3fe4b";
     const email = "astro@teste.com";
     const response = await request(server)
       .delete(`/remover/${id}`)
       .send({ email: email });
+    expect(response.status).toBe(200);
+  });
+
+  it.only("deve ser possível os sensores se autenticarem e enviarem dados para o campo valor", async () => {
+    const id = "0f605f47-9b7a-453c-9f1c-08026525a937";
+    const pwd = "e6a3fc65";
+    const email = "astro@teste.com";
+    const valor = "35.5";
+
+    const response = await request(server)
+      .post("/dados")
+      .send({ deviceID: id, devicePWD: pwd, email: email, valor: valor });
     expect(response.status).toBe(200);
   });
 });
