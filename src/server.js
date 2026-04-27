@@ -55,6 +55,17 @@ const crypto = require("crypto");
 
 app.post("/dispositivos", async function (req, res) {
   let { email, apelido, unidade } = req.body;
+
+  const cliente = await clientes.findOne({ email: email });
+
+  if (cliente.email != email) {
+    return res
+      .status(403)
+      .send(
+        "Acesso negado: Não é possível add um sensor de um email inválido!"
+      );
+  }
+
   let novoDispositivo = {};
   novoDispositivo.email = email;
   novoDispositivo.apelido = apelido;

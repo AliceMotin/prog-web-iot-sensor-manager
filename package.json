@@ -19,7 +19,8 @@
   "homepage": "https://github.com/AliceMotin/programacao-web-trabalho1#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "mongodb": "^7.1.1"
+    "mongodb": "^7.1.1",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "jest": "^30.3.0",

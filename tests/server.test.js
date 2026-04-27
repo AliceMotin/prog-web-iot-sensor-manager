@@ -2,7 +2,7 @@ const request = require("supertest");
 const server = require("../src/server");
 const { MongoClient } = require("mongodb");
 
-describe("testes", () => {
+describe("testes de integração", () => {
   var db;
   var clientes;
   var client;
