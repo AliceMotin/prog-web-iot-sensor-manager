@@ -18,18 +18,46 @@ async function conecta() {
 }
 
 app.use(express.json());
-app.use(express.static(__dirname + "/public"));
+
+const path = require("path");
+
+// Isso garante que o Express encontre a pasta 'public'
+// independente de onde você chame o comando 'node' no terminal.
+app.use(express.static(path.join(__dirname, "..", "public")));
+
+// app.use(express.json());
+// app.use(express.static(__dirname + ".. /public"));
 
 //usar express para servir as páginas
 //app.use(express.static("/public"));
-//app.get("/", function (request, response) {});
 
 app.post("/cadastro", async function (req, res) {
-  let { nome, email, senha } = req.body;
+  const { nome, email, senha } = req.body;
+
   let registro = {};
   registro.nome = nome;
   registro.email = email;
   registro.senha = senha;
+
+  if (!nome) {
+    return res.status(403).send("Acesso negado: Insira um Nome");
+  }
+
+  if (!email) {
+    return res.status(403).send("Acesso negado: Insira um email");
+  }
+
+  if (!senha) {
+    return res.status(403).send("Acesso negado: Insira uma senha");
+  }
+
+  const cliente = await clientes.findOne({ email: email });
+
+  if (cliente) {
+    return res
+      .status(403)
+      .send("Acesso negado: Esse email já foi cadastrado anteriormente!");
+  }
 
   await clientes.insertOne(registro);
   res

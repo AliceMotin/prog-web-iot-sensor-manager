@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <a class="button-link user" href="/">Menu Principal</a>
+    <h2>Cadastro de clientes:</h2>
+
+    <label>Nome:</label>
+    <input id="nome" />
+    <br />
+    <label>Email:</label>
+    <input id="email" />
+    <br />
+
+    <label>Senha:</label>
+    <input id="senha" />
+    <br />
+
+    <button onclick="insere()">ADICIONAR</button>
+    <!-- <div
+      id="mensagem-erro"
+      style="color: red; margin-top: 10px; font-weight: bold"
+    ></div> -->
+
+    <script>
+      async function insere() {
+        let registro = {};
+        registro.nome = document.getElementById("nome").value;
+        registro.email = document.getElementById("email").value;
+        registro.senha = document.getElementById("senha").value;
+
+        const res = await fetch("/cadastro", {
+          method: "POST",
+          headers: {
+            //Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registro), //string formatada em json
+        });
+        if (res.ok) {
+          alert("Cadastro realizado com sucesso");
+
+          // LIMPEZA DOS CAMPOS:
+          document.getElementById("nome").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("senha").value = "";
+        } else {
+          const mensagemErro = await res.text();
+
+          if (
+            mensagemErro ===
+            "Acesso negado: Esse email já foi cadastrado anteriormente!"
+          ) {
+            alert(mensagemErro);
+            // Coloque aqui sua lógica específica para esse erro
+          } else if (mensagemErro === "Acesso negado: Insira um Nome") {
+            alert(mensagemErro);
+          } else if (mensagemErro === "Acesso negado: Insira uma senha") {
+            alert(mensagemErro);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

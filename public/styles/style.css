@@ -1,0 +1,81 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Segoe UI", Roboto, sans-serif;
+    background: #e2e8f0;
+}
+
+table,
+th,
+td {
+    border: 1px solid   gray;
+
+    border-collapse: collapse;
+}
+table td {
+    padding: 5px;
+}
+table {
+
+    margin: auto;
+    margin-top: 5em;
+}
+table th {
+    padding: 5px;
+    background-color: #38bdf8;
+    color:white;
+}
+.form {
+    border:1px solid gray;
+    padding:10px;
+    margin:50px;
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 5px;
+}
+input {
+    width: 30%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #334155;
+    background:lightgray
+    color: #fff;
+}
+
+input:focus {
+    outline: none;
+    border-color: #38bdf8;
+}
+
+button {
+    padding: 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+
+.button-link {
+    background-color: #4db8ff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none; /* Removes default underline */
+    display: block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer; /* Changes cursor to a hand pointer */
+    border-radius: 4px;
+    width: 20ch;
+}
+
+.button-link:hover {
+    background-color: #0056b3 !important; /* Darker blue on hover */
+}

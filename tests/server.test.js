@@ -40,6 +40,18 @@ describe("testes de integração", () => {
     expect(response.status).toBe(201);
   });
 
+  it.only("não deve poder realizar um cadastro com um email que já está no BD", async () => {
+    const novoUsuario = {
+      nome: "Astro",
+      email: "astro@teste.com",
+      senha: "123",
+    };
+
+    const response = await request(server).post("/cadastro").send(novoUsuario);
+
+    expect(response.status).toBe(403);
+  });
+
   it("deve buscar o email e a senha do usuário no BD - válido", async () => {
     const usuarioLoginOK = {
       email: "astro@teste.com",
@@ -106,7 +118,7 @@ describe("testes de integração", () => {
     expect(response.status).toBe(200);
   });
 
-  it.only("deve ser possível os sensores se autenticarem e enviarem dados para o campo valor", async () => {
+  it("deve ser possível os sensores se autenticarem e enviarem dados para o campo valor", async () => {
     const id = "0f605f47-9b7a-453c-9f1c-08026525a937";
     const pwd = "e6a3fc65";
     const email = "astro@teste.com";
