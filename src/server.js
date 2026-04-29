@@ -71,9 +71,13 @@ app.post("/cadastro", async function (req, res) {
 
   const resultado = await clientes.insertOne(registro);
 
-  const token = jwt.sign({ id: resultado.insertedId, email: email }, segredo, {
-    expiresIn: 1000,
-  });
+  const token = jwt.sign(
+    { id: resultado.insertedId.toString(), email: email },
+    segredo,
+    {
+      expiresIn: 1000,
+    }
+  );
 
   res.status(201).json({
     status: "sucesso",
@@ -112,21 +116,22 @@ app.post("/login", autenticacao, async function (req, res) {
 
 const crypto = require("crypto");
 
-app.post("/dispositivos", async function (req, res) {
-  let { email, apelido, unidade } = req.body;
+app.post("/dispositivos", autenticacao, async function (req, res) {
+  let { apelido, unidade } = req.body;
+  const { ObjectId } = require("mongodb");
+  const cliente = await clientes.findOne({ _id: new ObjectId(req.id) });
 
-  const cliente = await clientes.findOne({ email: email });
+  //const cliente = await clientes.findOne({ email: email });
 
-  if (cliente.email != email) {
+  if (!cliente) {
     return res
       .status(403)
-      .send(
-        "Acesso negado: Não é possível add um sensor de um email inválido!"
-      );
+      .send("Acesso negado: Não é possível add um sensor, token inválido!");
   }
 
   let novoDispositivo = {};
-  novoDispositivo.email = email;
+  //novoDispositivo.donoID = new ObjectId(req.id);
+  novoDispositivo.email = cliente.email;
   novoDispositivo.apelido = apelido;
   novoDispositivo.unidade = unidade;
   novoDispositivo.deviceID = crypto.randomUUID();
@@ -136,15 +141,19 @@ app.post("/dispositivos", async function (req, res) {
   await dispositivos.insertOne(novoDispositivo);
 
   //Atualizar a lista de sensores no documento do usuário
-  await db
-    .collection("clientes")
-    .updateOne(
-      { email: email },
-      { $push: { dispositivos: novoDispositivo.deviceID } }
-    );
+  await clientes.updateOne(
+    { _id: new ObjectId(req.id) },
+    { $push: { dispositivos: novoDispositivo.deviceID } }
+  );
 
-  res.status(201).send(novoDispositivo); //-> talvez devolver apenas o device ID e devicePWD para o cliente
+  //res.status(201).send(novoDispositivo); //-> talvez devolver apenas o device ID e devicePWD para o cliente
   //talvez res.status(201).json(novoDispositivo);
+
+  res.status(201).json({
+    status: "sucesso",
+    deviceID: novoDispositivo.deviceID,
+    devicePWD: novoDispositivo.devicePWD,
+  });
 });
 
 //http://localhost:10000/lista/astro@teste.com

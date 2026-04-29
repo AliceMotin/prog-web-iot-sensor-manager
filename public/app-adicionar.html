@@ -4,29 +4,46 @@
   </head>
   <body>
     <a class="button-link user" href="/">Menu Principal</a>
-    <h2>App que CRIA dispositivos:</h2>
+    <h2>Adicionar dispositivos:</h2>
 
     <label>Apelido:</label>
     <input id="apelido" />
     <br />
     <label>Unidade de medida:</label>
-    <input id="Unidade" />
+    <input id="unidade" />
     <br />
     <button onclick="insere()">ADICIONAR</button>
 
     <script>
       async function insere() {
+        // 1. Pega o token salvo no navegador
+        const token = localStorage.getItem("meu_token");
+        const feedback = document.getElementById("feedback");
         let registro = {};
-        registro.nome = document.getElementById("apelido").value;
-        registro.end = document.getElementById("unidade").value;
-        await fetch("/dispositivos", {
+        registro.apelido = document.getElementById("apelido").value;
+        registro.unidade = document.getElementById("unidade").value;
+        const res = await fetch("/dispositivos", {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            "x-access-token": token,
           },
           body: JSON.stringify(registro),
         });
+        if (res.ok) {
+          const dados = await res.json();
+
+          // feedback.innerHTML = `
+          //     <p style="color: green;">✅ Dispositivo adicionado com sucesso!</p>
+          //     <p><strong>ID:</strong> ${dados.deviceID}</p>
+          //     <p><strong>Senha:</strong> ${dados.devicePWD}</p>
+          //   `;
+
+          // Limpa os campos após o sucesso
+          document.getElementById("apelido").value = "";
+          document.getElementById("unidade").value = "";
+        }
       }
     </script>
   </body>

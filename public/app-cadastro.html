@@ -45,6 +45,7 @@
           if (resultado.token) {
             // Exibe o token na tela
             document.getElementById("tokenDisplay").innerText = resultado.token;
+            localStorage.setItem("meu_token", resultado.token); //salva o token
 
             // DICA: Salve o token para usar depois em outras páginas
             //localStorage.setItem("meu_token", resultado.token);
