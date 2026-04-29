@@ -117,8 +117,8 @@ app.post("/dispositivos", async function (req, res) {
 });
 
 //http://localhost:10000/lista/astro@teste.com
-app.get("/lista/:email", async function (req, resp) {
-  let email = req.params.email;
+app.get("/lista", async function (req, resp) {
+  let email = req.query.email; //req.params apenas para rotas com :
   let listaDispositivos = await dispositivos.find({ email: email }).toArray();
   resp.status(200).send(listaDispositivos);
 });
@@ -171,7 +171,7 @@ app.post("/dados", async function (req, resp) {
   // 1. Validar permissão: Busca o sensor e checa se o dono é quem diz ser
   const sensor = await dispositivos.findOne({ deviceID: id, devicePWD: pwd });
 
-  if (sensor.email !== email) {
+  if (!sensor || sensor.email !== email) {
     return resp.status(403).send("Acesso negado: Este dispositivo não é seu!");
   }
 

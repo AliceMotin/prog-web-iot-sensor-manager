@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <a class="button-link user" href="/">Menu Principal</a>
+    <h2>Lista de dispositivos:</h2>
+
+    <div id="lista"></div>
+    <script>
+      async function pegaDados() {
+        const email = localStorage.getItem("usuario_email");
+
+        if (!email) {
+          alert("Você precisa estar logado.");
+          return;
+        }
+        let listagem = await fetch(`/lista?email=${email}`);
+        listagem = await listagem.json();
+        console.log(listagem);
+
+        let tmp = "";
+        for (let a = 0; a < listagem.length; a++) {
+          tmp =
+            tmp +
+            `<b>${listagem[a].apelido}</b> (${listagem[a].unidade}) (${listagem[a].valor}) <br>`;
+        }
+        document.getElementById("lista").innerHTML = tmp;
+      }
+
+      pegaDados();
+
+      setInterval(pegaDados, 3000);
+    </script>
+  </body>
+</html>

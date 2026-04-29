@@ -3,6 +3,7 @@ const fetch = require("node-fetch");
 // Captura de parâmetros: node simulador.js <ID> <PWD>
 const deviceID = process.argv[2];
 const devicePWD = process.argv[3];
+const emailDono = process.argv[4];
 
 if (!deviceID || !devicePWD) {
   console.error("Uso correto: node simulador.js <DeviceID> <DevicePWD>");
@@ -18,7 +19,7 @@ async function enviarDados() {
   const payload = {
     deviceID: deviceID,
     devicePWD: devicePWD,
-    email: "astro@teste.com", // O e-mail que você usou no seu server.js
+    email: emailDono,
     valor: parseFloat(valorSimulado),
   };
 
@@ -35,6 +36,7 @@ async function enviarDados() {
       );
     } else {
       console.error(`Erro no servidor: ${response.status}`);
+      console.log(error);
     }
   } catch (error) {
     console.error("Não foi possível conectar ao servidor. Ele está rodando?");
