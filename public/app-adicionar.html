@@ -14,10 +14,6 @@
     <br />
 
     <button onclick="insere()">ADICIONAR</button>
-    <!-- <div
-      id="mensagem-erro"
-      style="color: red; margin-top: 10px; font-weight: bold"
-    ></div> -->
 
     <script>
       async function insere() {
@@ -42,12 +38,8 @@
           body: JSON.stringify(registro), //string formatada em json
         });
         if (res.ok) {
-          alert("Cadastro realizado com sucesso");
+          alert("Dispositivo adicionado com sucesso");
 
-          // Agora sim, muda de página
-          //window.location.href = "/app-adicionar.html";
-
-          // LIMPEZA DOS CAMPOS:
           document.getElementById("apelido").value = "";
           document.getElementById("unidade").value = "";
         }
