@@ -18,10 +18,10 @@
     <br />
 
     <button onclick="insere()">ADICIONAR</button>
-    <!-- <div
-      id="mensagem-erro"
-      style="color: red; margin-top: 10px; font-weight: bold"
-    ></div> -->
+    <div id="resultado" style="margin-top: 20px; word-break: break-all">
+      <strong>Seu Token:</strong>
+      <span id="tokenDisplay">Aguardando cadastro...</span>
+    </div>
 
     <script>
       async function insere() {
@@ -39,7 +39,22 @@
           body: JSON.stringify(registro), //string formatada em json
         });
         if (res.ok) {
-          alert("Cadastro realizado com sucesso");
+          //alert("Cadastro realizado com sucesso");
+          const resultado = await res.json();
+
+          if (resultado.token) {
+            // Exibe o token na tela
+            document.getElementById("tokenDisplay").innerText = resultado.token;
+
+            // DICA: Salve o token para usar depois em outras páginas
+            //localStorage.setItem("meu_token", resultado.token);
+            //window.location.href = "/app-adicionar.html";
+            setTimeout(function () {
+              window.location.href = "/app-adicionar.html";
+            }, 5000);
+          } else {
+            alert("Erro ao cadastrar: " + resultado.message);
+          }
 
           // LIMPEZA DOS CAMPOS:
           document.getElementById("nome").value = "";

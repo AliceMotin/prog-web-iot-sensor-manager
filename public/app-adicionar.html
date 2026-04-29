@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <a class="button-link user" href="/">Menu Principal</a>
+    <h2>App que CRIA dispositivos:</h2>
+
+    <label>Apelido:</label>
+    <input id="apelido" />
+    <br />
+    <label>Unidade de medida:</label>
+    <input id="Unidade" />
+    <br />
+    <button onclick="insere()">ADICIONAR</button>
+
+    <script>
+      async function insere() {
+        let registro = {};
+        registro.nome = document.getElementById("apelido").value;
+        registro.end = document.getElementById("unidade").value;
+        await fetch("/dispositivos", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registro),
+        });
+      }
+    </script>
+  </body>
+</html>

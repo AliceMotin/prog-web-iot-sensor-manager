@@ -1,7 +1,14 @@
 var express = require("express");
+var jwt = require("jsonwebtoken");
+var segredo = "kjsjdr3kjdskjsfkjjkq4tfklf";
 var app = express();
+const path = require("path");
 
 const { MongoClient } = require("mongodb");
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(express.urlencoded({ extended: true })); // support encoded bodies
 
 var db;
 var clientes;
@@ -17,23 +24,26 @@ async function conecta() {
   console.log("conectado no mongoDB");
 }
 
-app.use(express.json());
+function autenticacao(req, res, next) {
+  var token = req.headers["x-access-token"];
+  if (!token)
+    return res
+      .status(401)
+      .json({ status: "falha", mmsgessage: "nao veio token" });
 
-const path = require("path");
+  jwt.verify(token, segredo, function (err, decoded) {
+    if (err)
+      return res.status(401).json({ status: "falha", msg: "token errado" });
 
-// Isso garante que o Express encontre a pasta 'public'
-// independente de onde você chame o comando 'node' no terminal.
-app.use(express.static(path.join(__dirname, "..", "public")));
+    // se tudo estiver ok, salva no request para uso posterior
+    req.id = decoded.id;
 
-// app.use(express.json());
-// app.use(express.static(__dirname + ".. /public"));
-
-//usar express para servir as páginas
-//app.use(express.static("/public"));
+    next();
+  });
+}
 
 app.post("/cadastro", async function (req, res) {
   const { nome, email, senha } = req.body;
-
   let registro = {};
   registro.nome = nome;
   registro.email = email;
@@ -59,25 +69,46 @@ app.post("/cadastro", async function (req, res) {
       .send("Acesso negado: Esse email já foi cadastrado anteriormente!");
   }
 
-  await clientes.insertOne(registro);
-  res
-    .status(201)
-    .send("O usuário foi criado com sucesso, pode prosseguir para o login");
+  const resultado = await clientes.insertOne(registro);
+
+  const token = jwt.sign({ id: resultado.insertedId, email: email }, segredo, {
+    expiresIn: 1000,
+  });
+
+  res.status(201).json({
+    status: "sucesso",
+    token: token, // O token gerado pelo jwt.sign
+  });
 });
 
-app.post("/login", async function (req, res) {
-  let { email, senha } = req.body;
-  let registro = {};
-  registro.email = email;
-  registro.senha = senha;
+app.post("/login", autenticacao, async function (req, res) {
+  const { ObjectId } = require("mongodb");
+  const usuario = await clientes.findOne({ _id: new ObjectId(req.id) });
 
-  const usuario = await clientes.findOne(registro);
   if (usuario) {
-    res.status(200).send("O usuário foi achado com sucesso");
+    res.status(200).json({
+      status: "sucesso",
+      msg: "Token validado com sucesso",
+      usuario: usuario,
+    });
   } else {
-    res.status(401).send("O usuário não foi achado");
+    res.status(404).json({ status: "falha", msg: "Usuário não existe mais" });
   }
 });
+
+// app.post("/login", async function (req, res) {
+//   let { email, senha } = req.body;
+//   let registro = {};
+//   registro.email = email;
+//   registro.senha = senha;
+
+//   const usuario = await clientes.findOne(registro);
+//   if (usuario) {
+//     res.status(200).send("O usuário foi achado com sucesso");
+//   } else {
+//     res.status(401).send("O usuário não foi achado");
+//   }
+// });
 
 const crypto = require("crypto");
 

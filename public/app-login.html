@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <a class="button-link user" href="/">Menu Principal</a>
+    <h2>Login:</h2>
+
+    <label>Token:</label>
+    <input id="token" />
+    <br />
+    <button onclick="insere()">ENTRAR</button>
+
+    <script>
+      async function insere() {
+        const token = document.getElementById("token").value;
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "x-access-token": token, //Header de Autorização personalizado
+          },
+          body: JSON.stringify(token),
+        });
+        if (res.ok) {
+          window.location.href = "/app-adicionar.html";
+        } else {
+          alert("Token inválido");
+        }
+      }
+    </script>
+  </body>
+</html>
