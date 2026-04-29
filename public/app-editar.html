@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <a class="button-link user" href="/">Menu Principal</a>
+    <h2>Editar apelido do dispositivo:</h2>
+
+    <label>Apelido novo:</label>
+    <input id="apelidoNovo" />
+    <br />
+    <label>DeviceID:</label>
+    <input id="deviceID" />
+    <br />
+
+    <button onclick="insere()">EDITAR</button>
+
+    <script>
+      async function insere() {
+        const emailLogado = localStorage.getItem("usuario_email");
+
+        if (!emailLogado) {
+          alert("Você precisa estar logado.");
+          return;
+        }
+
+        let registro = {};
+        registro.email = emailLogado;
+        registro.apelido = document.getElementById("apelidoNovo").value;
+        registro.id = document.getElementById("deviceID").value;
+
+        const res = await fetch("/edicao", {
+          method: "PATCH",
+          headers: {
+            //Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registro), //string formatada em json
+        });
+        if (res.ok) {
+          alert("Apelido editado com sucesso");
+
+          document.getElementById("apelidoNovo").value = "";
+          document.getElementById("deviceID").value = "";
+        }
+      }
+    </script>
+  </body>
+</html>

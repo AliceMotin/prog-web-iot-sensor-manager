@@ -123,12 +123,9 @@ app.get("/lista", async function (req, resp) {
   resp.status(200).send(listaDispositivos);
 });
 
-app.patch("/edicao/:id", async function (req, resp) {
-  let id = req.params.id;
-  const email = req.body.email;
-  const novoApelido = req.body.apelido;
+app.patch("/edicao", async function (req, resp) {
+  const { id, email, apelido } = req.body;
 
-  // 1. Validar permissão: Busca o sensor e checa se o dono é quem diz ser
   const sensor = await dispositivos.findOne({ deviceID: id });
 
   if (sensor.email !== email) {
@@ -137,7 +134,7 @@ app.patch("/edicao/:id", async function (req, resp) {
 
   await dispositivos.updateOne(
     { deviceID: id },
-    { $set: { apelido: novoApelido } }
+    { $set: { apelido: apelido } }
   );
   resp.status(200).send("Atualizado com sucesso");
 });
