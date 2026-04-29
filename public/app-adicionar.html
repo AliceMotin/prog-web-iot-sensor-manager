@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <a class="button-link user" href="/">Menu Principal</a>
+    <h2>Adição de dispositivos:</h2>
+
+    <label>Apelido:</label>
+    <input id="apelido" />
+    <br />
+    <label>Unidade:</label>
+    <input id="unidade" />
+    <br />
+
+    <button onclick="insere()">ADICIONAR</button>
+    <!-- <div
+      id="mensagem-erro"
+      style="color: red; margin-top: 10px; font-weight: bold"
+    ></div> -->
+
+    <script>
+      async function insere() {
+        const emailLogado = localStorage.getItem("usuario_email");
+
+        if (!emailLogado) {
+          alert("Você precisa estar logado.");
+          return;
+        }
+
+        let registro = {};
+        registro.email = emailLogado;
+        registro.apelido = document.getElementById("apelido").value;
+        registro.unidade = document.getElementById("unidade").value;
+
+        const res = await fetch("/dispositivos", {
+          method: "POST",
+          headers: {
+            //Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registro), //string formatada em json
+        });
+        if (res.ok) {
+          alert("Cadastro realizado com sucesso");
+
+          // Agora sim, muda de página
+          //window.location.href = "/app-adicionar.html";
+
+          // LIMPEZA DOS CAMPOS:
+          document.getElementById("apelido").value = "";
+          document.getElementById("unidade").value = "";
+        }
+      }
+    </script>
+  </body>
+</html>

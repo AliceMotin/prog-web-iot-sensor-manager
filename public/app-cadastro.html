@@ -41,6 +41,15 @@
         if (res.ok) {
           alert("Cadastro realizado com sucesso");
 
+          // Pega o email que o usuário digitou no input
+          const emailUsuario = document.getElementById("email").value;
+
+          // Salva na "memória" do navegador
+          localStorage.setItem("usuario_email", emailUsuario);
+
+          // Agora sim, muda de página
+          window.location.href = "/app-adicionar.html";
+
           // LIMPEZA DOS CAMPOS:
           document.getElementById("nome").value = "";
           document.getElementById("email").value = "";
