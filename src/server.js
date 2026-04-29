@@ -139,11 +139,9 @@ app.patch("/edicao", async function (req, resp) {
   resp.status(200).send("Atualizado com sucesso");
 });
 
-app.delete("/remover/:id", async function (req, resp) {
-  let id = req.params.id;
-  const email = req.body.email;
+app.delete("/remover", async function (req, resp) {
+  const { id, email } = req.body;
 
-  // 1. Validar permissão: Busca o sensor e checa se o dono é quem diz ser
   const sensor = await dispositivos.findOne({ deviceID: id });
 
   if (sensor.email !== email) {

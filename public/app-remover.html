@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <a class="button-link user" href="/">Menu Principal</a>
+    <h2>Remover dispositivo:</h2>
+
+    <label>DeviceID:</label>
+    <input id="deviceID" />
+    <br />
+
+    <button onclick="insere()">REMOVER</button>
+
+    <script>
+      async function insere() {
+        const emailLogado = localStorage.getItem("usuario_email");
+
+        if (!emailLogado) {
+          alert("Você precisa estar logado.");
+          return;
+        }
+
+        let registro = {};
+        registro.email = emailLogado;
+        registro.id = document.getElementById("deviceID").value;
+
+        const res = await fetch("/remover", {
+          method: "DELETE",
+          headers: {
+            //Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registro), //string formatada em json
+        });
+        if (res.ok) {
+          alert("Dispositivo removido com sucesso");
+
+          document.getElementById("deviceID").value = "";
+        }
+      }
+    </script>
+  </body>
+</html>
