@@ -5,7 +5,16 @@
 }
 body {
     font-family: "Segoe UI", Roboto, sans-serif;
-    background: #e2e8f0;
+    background-color: #f0f2f5;
+    
+    /* Ativa o Flexbox */
+    display: flex;
+    flex-direction: column;  /* Alinha os itens em coluna */
+    justify-content: center; /* Centraliza no eixo vertical (porque é column) */
+    align-items: center;     /* Centraliza no eixo horizontal */
+    
+    min-height: 100vh;
+    margin: 0;
 }
 
 table,
@@ -25,7 +34,7 @@ table {
 }
 table th {
     padding: 5px;
-    background-color: #38bdf8;
+    background-color: #bb38f8;
     color:white;
 }
 .form {
@@ -52,6 +61,7 @@ input:focus {
 }
 
 button {
+    background-color: #71c275;
     padding: 12px;
     border-radius: 4px;
     border: none;
@@ -59,10 +69,12 @@ button {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
-
+.button:hover {
+    background-color: #305c2f !important; /* Darker blue on hover */
+}
 
 .button-link {
-    background-color: #4db8ff;
+    background-color: #e29deb;
     border: none;
     color: white;
     padding: 10px 20px;
@@ -77,5 +89,5 @@ button {
 }
 
 .button-link:hover {
-    background-color: #0056b3 !important; /* Darker blue on hover */
+    background-color: #bd70cc !important; /* Darker blue on hover */
 }
