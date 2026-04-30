@@ -3,9 +3,19 @@
     <link rel="stylesheet" href="styles/style.css" />
   </head>
   <body>
+    <h2>Menu do usuário</h2>
+    <a class="button-link user" href="/">Voltar para Menu Principal</a>
     <a class="button-link user" href="/app-adicionar.html">Adicionar</a>
     <a class="button-link user" href="/app-editar.html">Editar Apelido</a>
     <a class="button-link user" href="/app-lista.html">Visualizar</a>
     <a class="button-link user" href="/app-remover.html">Remover</a>
+    <a class="button-link user" href="#" onclick="logout()">Sair</a>
+    <script>
+      function logout() {
+        localStorage.removeItem("emailLogado");
+        alert("Você saiu!");
+        window.location.reload(); // Recarrega a página para atualizar os botões
+      }
+    </script>
   </body>
 </html>

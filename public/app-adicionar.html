@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="styles/style.css" />
   </head>
   <body>
-    <a class="button-link user" href="/">Menu Principal</a>
+    <!-- <a class="button-link user" href="/">Voltar</a> -->
     <h2>Adição de dispositivos:</h2>
 
     <label>Apelido:</label>
@@ -14,6 +14,12 @@
     <br />
 
     <button onclick="insere()">ADICIONAR</button>
+    <div id="resultado" style="margin-top: 20px; word-break: break-all">
+      <strong>DeviceID:</strong>
+      <span id="deviceID">Aguardando...</span>
+      <strong>DevicePWD:</strong>
+      <span id="devicePWD">Aguardando...</span>
+    </div>
 
     <script>
       async function insere() {
@@ -38,7 +44,15 @@
           body: JSON.stringify(registro), //string formatada em json
         });
         if (res.ok) {
-          alert("Dispositivo adicionado com sucesso");
+          const resultado = await res.json();
+
+          if (resultado.deviceID && resultado.devicePWD) {
+            // Exibe o token na tela
+            document.getElementById("deviceID").innerText = resultado.deviceID;
+            document.getElementById("devicePWD").innerText =
+              resultado.devicePWD;
+          }
+          //alert("Dispositivo adicionado com sucesso");
 
           document.getElementById("apelido").value = "";
           document.getElementById("unidade").value = "";

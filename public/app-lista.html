@@ -3,19 +3,19 @@
     <link rel="stylesheet" href="styles/style.css" />
   </head>
   <body>
-    <a class="button-link user" href="/">Menu Principal</a>
+    <!-- <a class="button-link user" href="/">Voltar</a> -->
     <h2>Lista de dispositivos:</h2>
 
     <div id="lista"></div>
     <script>
       async function pegaDados() {
-        const email = localStorage.getItem("usuario_email");
+        const emailLogado = localStorage.getItem("usuario_email");
 
-        if (!email) {
+        if (!emailLogado) {
           alert("Você precisa estar logado.");
           return;
         }
-        let listagem = await fetch(`/lista?email=${email}`);
+        let listagem = await fetch(`/lista?email=${emailLogado}`);
         listagem = await listagem.json();
         console.log(listagem);
 
@@ -23,7 +23,15 @@
         for (let a = 0; a < listagem.length; a++) {
           tmp =
             tmp +
-            `<b>${listagem[a].apelido}</b> (${listagem[a].unidade}) (${listagem[a].valor}) <br>`;
+            `<div class="dispositivo-item">
+              <b>Apelido:</b> ${listagem[a].apelido}, 
+              <b>Unidade:</b> ${listagem[a].unidade}, 
+              <b>Valor:</b> ${
+                listagem[a].valor !== null ? listagem[a].valor : "--"
+              }, <br><br>
+              <b>DeviceID:</b> ${listagem[a].deviceID}
+              <b>DevicePWD:</b> ${listagem[a].devicePWD}
+            </div><br>`;
         }
         document.getElementById("lista").innerHTML = tmp;
       }

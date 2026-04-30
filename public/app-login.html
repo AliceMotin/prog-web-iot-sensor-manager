@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="styles/style.css" />
   </head>
   <body>
-    <a class="button-link user" href="/">Menu Principal</a>
+    <a class="button-link user" href="/">Voltar</a>
     <h2>Login:</h2>
 
     <label>Email:</label>
@@ -31,9 +31,9 @@
         if (res.ok) {
           alert("Login realizado com sucesso");
 
-          const emailUsuario = document.getElementById("email").value;
+          const emailLogado = document.getElementById("email").value;
 
-          localStorage.setItem("usuario_email", emailUsuario);
+          localStorage.setItem("emailLogado", registro.email);
 
           window.location.href = "/app-menu.html";
 

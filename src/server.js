@@ -93,27 +93,29 @@ app.post("/dispositivos", async function (req, res) {
         "Acesso negado: Não é possível add um sensor de um email inválido!"
       );
   }
+  const deviceID = crypto.randomUUID();
+  const devicePWD = crypto.randomBytes(4).toString("hex");
 
   let novoDispositivo = {};
   novoDispositivo.email = email;
   novoDispositivo.apelido = apelido;
   novoDispositivo.unidade = unidade;
-  novoDispositivo.deviceID = crypto.randomUUID();
-  novoDispositivo.devicePWD = crypto.randomBytes(4).toString("hex");
+  novoDispositivo.deviceID = deviceID;
+  novoDispositivo.devicePWD = devicePWD;
   novoDispositivo.valor = null;
 
   await dispositivos.insertOne(novoDispositivo);
 
-  //Atualizar a lista de sensores no documento do usuário
-  await db
-    .collection("clientes")
-    .updateOne(
-      { email: email },
-      { $push: { dispositivos: novoDispositivo.deviceID } }
-    );
+  await clientes.updateOne(
+    { email: email },
+    { $push: { dispositivos: novoDispositivo.deviceID } }
+  );
 
-  res.status(201).send(novoDispositivo); //-> talvez devolver apenas o device ID e devicePWD para o cliente
-  //talvez res.status(201).json(novoDispositivo);
+  res.status(201).json({
+    status: "sucesso",
+    deviceID: deviceID,
+    devicePWD: devicePWD,
+  });
 });
 
 //http://localhost:10000/lista/astro@teste.com
@@ -128,7 +130,7 @@ app.patch("/edicao", async function (req, resp) {
 
   const sensor = await dispositivos.findOne({ deviceID: id });
 
-  if (sensor.email !== email) {
+  if (!sensor) {
     return resp.status(403).send("Acesso negado: Este dispositivo não é seu!");
   }
 
