@@ -31,8 +31,8 @@ O sistema consiste em uma plataforma web de gerenciamento de dispositivos sensor
 
 ### 1. Clonar o repositório
 ```bash
-git clone [https://github.com/seu-usuario/nome-do-repositorio.git](https://github.com/seu-usuario/nome-do-repositorio.git)
-cd nome-do-repositorio
+git clone [https://github.com/AliceMotin/prog-web-iot-sensor-manager.git](https://github.com/AliceMotin/prog-web-iot-sensor-manager.git)
+cd prog-web-iot-sensor-manager
 ```
 ### 2. Configurar e Rodar o Servidor
 ```bash
